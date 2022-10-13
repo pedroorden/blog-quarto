@@ -1,0 +1,23 @@
+project:
+  type: website
+
+website:
+  favicon: logo.png
+  title: "Tec & Soc."
+  navbar:
+    right:
+      - about.qmd
+      - icon: linkedin
+        href: https://twitter.com
+      - icon: github
+        href: https://github.com/
+      - icon: book
+        href: https://independent.academia.edu/PedroOrden
+
+format:
+  html:
+    theme: pulse
+    css: styles.css
+
+
+
