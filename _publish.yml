@@ -1,0 +1,7 @@
+- source: project
+  quarto-pub:
+    - id: f6010748-4f82-402e-b0b8-4c0b1145e349
+      url: 'https://quartopub.com/sites/pedroorden/tec--soc'
+  netlify:
+    - id: 8ea093ef-f578-403f-8736-3897d068b7dd
+      url: 'https://bright-bonbon-9b3c8f.netlify.app'
