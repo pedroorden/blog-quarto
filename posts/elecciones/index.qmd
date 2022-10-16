@@ -1,5 +1,5 @@
 ---
-title: "Apuntes sobre la preferencia electoral en la Ciudad de Lanús en las legislativas de 2021"
+title: "Apuntes sobre preferencia electoral en la Ciudad de Lanús en las legislativas de 2021"
 author: "Pedro Damian Orden"
 date: "2022-09-14"
 categories: [codigo, apuntes]

@@ -20,7 +20,7 @@ A menudo un sentido común extendido asocia el arte al cauce de la expresión em
 
 Es dable destacar que las bases de la propuesta estética fueron establecidas en el [Manifiesto Arte Generativo](1959)(https://noticiasrecoleta.com.ar/el-arte-generativo-y-sus-60-anos-exposicion-de-obras-en-el-museo-de-arte-moderno/) por los artistas argentinos [Eduardo Mac Entyre y Miguel Ángel Vidal](http://mcmcgaleria.com/es/muestra/miguel-angel-vidal-eduardo-mac-entyre-arte-generativo) ( *foto* ) donde se proclamaba el espacio como un campo abierto a las tensiones de formas orbitales, trayectorias proyectadas y planos fugados en profundidad.
 
-<center> ![](https://www.arte-online.net/var/arte_online_net/storage/images/arte-online/notas/eduardo-mac-entyre-y-miguel-angel-vidal/888351-1-esl-AR/Eduardo-Mac-Entyre-y-Miguel-Angel-Vidal_nota.jpg "Eduardo Mac Entyre y Miguel Ángel Vidal (60s)"){width="80%"}
+![](https://www.arte-online.net/var/arte_online_net/storage/images/arte-online/notas/eduardo-mac-entyre-y-miguel-angel-vidal/888351-1-esl-AR/Eduardo-Mac-Entyre-y-Miguel-Angel-Vidal_nota.jpg "Eduardo Mac Entyre y Miguel Ángel Vidal (60s)"){width="100%"}
 
 ### Manos a la obra
 
@@ -35,7 +35,7 @@ library(ggplot2)
 
 Para situarnos en el espacio que nos propone R, comenzamos haciendo algo que ya conocemos: un ggplot de puntos en un plano con colores y formas. En términos generales, esta es una de las lógicas subyacentes de la visualización y nos permite tomar una dimensión de las potencialidades de nuestras herramientas.
 
-```{r df, error=FALSE, warning=FALSE, message=FALSE, out.width = '80%'}
+```{r df, error=FALSE, warning=FALSE, message=FALSE, out.width = '100%'}
 data <- data.frame(a1 = 1:5,# ej
 a2 = 1:5)
 ggplot(data, aes(a1, a2)) + # ggplot
@@ -47,7 +47,7 @@ size = ifelse(1:nrow(data)==3,5,1))
 
 Crearemos ahora un [espiral de arquímedes](https://es.wikipedia.org/wiki/Espiral_de_Arqu%C3%ADmedes) para ver qué pasa con ggplot cuando vamos mas allá de las rectas:
 
-```{r espiral, error=FALSE, warning=FALSE, message=FALSE, warning=FALSE,dataout.width = '80%'}
+```{r espiral, error=FALSE, warning=FALSE, message=FALSE, warning=FALSE,dataout.width = '100%'}
 # crea un fondo blanco para el grafico
 opt = theme(legend.position  = "none",
 panel.background = element_rect(fill="#f0eaf7"),
