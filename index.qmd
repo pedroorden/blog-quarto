@@ -9,8 +9,7 @@ listing:
   sort-ui: true
   filter-ui: true
   feed: true
+  fields: [date, title, reading-time, image, categories]
 page-layout: full
 title-block-banner: false
 ---
-
-Buscá informes, videos, tutoriales y más! Todos los materiales son de acceso libre.
