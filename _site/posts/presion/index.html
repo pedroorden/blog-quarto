@@ -9,7 +9,7 @@
 <meta name="author" content="Pedro Damian Orden">
 <meta name="dcterms.date" content="2022-09-06">
 
-<title>Tec &amp; Soc. - Utilizando Python y R en Quarto con la Encuesta Permanente de Hogares</title>
+<title>Tec &amp; Soc. - Python y R en Quarto con la Encuesta Permanente de Hogares</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,10 +101,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -149,12 +151,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="nav-link" href="../../about.html">About</a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com"><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/in/pedroorden/"><i class="bi bi-linkedin" role="img">
 </i> 
  </a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/pedroorden"><i class="bi bi-github" role="img">
 </i> 
  </a>
   </li>  
@@ -164,6 +166,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  </a>
   </li>  
 </ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -173,7 +178,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Utilizando Python y R en Quarto con la Encuesta Permanente de Hogares</h1>
+      <h1 class="title">Python y R en Quarto con la Encuesta Permanente de Hogares</h1>
             <p class="subtitle lead">Integración práctica aplicada al análisis del mercado de trabajo</p>
                                 <div class="quarto-categories">
                 <div class="quarto-category">codigo</div>
@@ -343,12 +348,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="cell-output-display">
 
-<div id="ahxnpciyaj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="lvcqpndguf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-:where(#ahxnpciyaj) .gt_table {
+:where(#lvcqpndguf) .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -373,7 +378,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_heading {
+:where(#lvcqpndguf) .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -385,7 +390,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_title {
+:where(#lvcqpndguf) .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -397,7 +402,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-:where(#ahxnpciyaj) .gt_subtitle {
+:where(#lvcqpndguf) .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -409,13 +414,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-:where(#ahxnpciyaj) .gt_bottom_border {
+:where(#lvcqpndguf) .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_col_headings {
+:where(#lvcqpndguf) .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -430,7 +435,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_col_heading {
+:where(#lvcqpndguf) .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -450,7 +455,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#ahxnpciyaj) .gt_column_spanner_outer {
+:where(#lvcqpndguf) .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -462,15 +467,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-:where(#ahxnpciyaj) .gt_column_spanner_outer:first-child {
+:where(#lvcqpndguf) .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-:where(#ahxnpciyaj) .gt_column_spanner_outer:last-child {
+:where(#lvcqpndguf) .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-:where(#ahxnpciyaj) .gt_column_spanner {
+:where(#lvcqpndguf) .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -482,7 +487,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-:where(#ahxnpciyaj) .gt_group_heading {
+:where(#lvcqpndguf) .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -507,7 +512,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#ahxnpciyaj) .gt_empty_group_heading {
+:where(#lvcqpndguf) .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -522,15 +527,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-:where(#ahxnpciyaj) .gt_from_md > :first-child {
+:where(#lvcqpndguf) .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-:where(#ahxnpciyaj) .gt_from_md > :last-child {
+:where(#lvcqpndguf) .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-:where(#ahxnpciyaj) .gt_row {
+:where(#lvcqpndguf) .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -549,7 +554,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-:where(#ahxnpciyaj) .gt_stub {
+:where(#lvcqpndguf) .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -562,7 +567,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#ahxnpciyaj) .gt_stub_row_group {
+:where(#lvcqpndguf) .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -576,11 +581,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-:where(#ahxnpciyaj) .gt_row_group_first td {
+:where(#lvcqpndguf) .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-:where(#ahxnpciyaj) .gt_summary_row {
+:where(#lvcqpndguf) .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -590,16 +595,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#ahxnpciyaj) .gt_first_summary_row {
+:where(#lvcqpndguf) .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_first_summary_row.thick {
+:where(#lvcqpndguf) .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-:where(#ahxnpciyaj) .gt_last_summary_row {
+:where(#lvcqpndguf) .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -609,7 +614,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_grand_summary_row {
+:where(#lvcqpndguf) .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -619,7 +624,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#ahxnpciyaj) .gt_first_grand_summary_row {
+:where(#lvcqpndguf) .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -629,11 +634,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_striped {
+:where(#lvcqpndguf) .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-:where(#ahxnpciyaj) .gt_table_body {
+:where(#lvcqpndguf) .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -642,7 +647,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_footnotes {
+:where(#lvcqpndguf) .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -656,7 +661,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_footnote {
+:where(#lvcqpndguf) .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -665,7 +670,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#ahxnpciyaj) .gt_sourcenotes {
+:where(#lvcqpndguf) .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -679,7 +684,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-:where(#ahxnpciyaj) .gt_sourcenote {
+:where(#lvcqpndguf) .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -687,64 +692,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-:where(#ahxnpciyaj) .gt_left {
+:where(#lvcqpndguf) .gt_left {
   text-align: left;
 }
 
-:where(#ahxnpciyaj) .gt_center {
+:where(#lvcqpndguf) .gt_center {
   text-align: center;
 }
 
-:where(#ahxnpciyaj) .gt_right {
+:where(#lvcqpndguf) .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-:where(#ahxnpciyaj) .gt_font_normal {
+:where(#lvcqpndguf) .gt_font_normal {
   font-weight: normal;
 }
 
-:where(#ahxnpciyaj) .gt_font_bold {
+:where(#lvcqpndguf) .gt_font_bold {
   font-weight: bold;
 }
 
-:where(#ahxnpciyaj) .gt_font_italic {
+:where(#lvcqpndguf) .gt_font_italic {
   font-style: italic;
 }
 
-:where(#ahxnpciyaj) .gt_super {
+:where(#lvcqpndguf) .gt_super {
   font-size: 65%;
 }
 
-:where(#ahxnpciyaj) .gt_footnote_marks {
+:where(#lvcqpndguf) .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-:where(#ahxnpciyaj) .gt_asterisk {
+:where(#lvcqpndguf) .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-:where(#ahxnpciyaj) .gt_indent_1 {
+:where(#lvcqpndguf) .gt_indent_1 {
   text-indent: 5px;
 }
 
-:where(#ahxnpciyaj) .gt_indent_2 {
+:where(#lvcqpndguf) .gt_indent_2 {
   text-indent: 10px;
 }
 
-:where(#ahxnpciyaj) .gt_indent_3 {
+:where(#lvcqpndguf) .gt_indent_3 {
   text-indent: 15px;
 }
 
-:where(#ahxnpciyaj) .gt_indent_4 {
+:where(#lvcqpndguf) .gt_indent_4 {
   text-indent: 20px;
 }
 
-:where(#ahxnpciyaj) .gt_indent_5 {
+:where(#lvcqpndguf) .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -929,15 +934,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div quarto-reuse="quarto-reuse" class="quarto-appendix-contents"><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{damianorden2022,
   author = {Pedro Damian Orden},
   editor = {},
-  title = {Utilizando {Python} y {R} En {Quarto} Con La {Encuesta}
-    {Permanente} de {Hogares}},
+  title = {Python y {R} En {Quarto} Con La {Encuesta} {Permanente} de
+    {Hogares}},
   date = {2022-09-06},
-  url = {https://bright-bonbon-9b3c8f.netlify.app/posts/presion},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-damianorden2022" class="csl-entry quarto-appendix-citeas" role="doc-biblioentry">
-Pedro Damian Orden. 2022. <span>“Utilizando Python y R En Quarto Con La
-Encuesta Permanente de Hogares.”</span> September 6, 2022. <a href="https://bright-bonbon-9b3c8f.netlify.app/posts/presion">https://bright-bonbon-9b3c8f.netlify.app/posts/presion</a>.
+Pedro Damian Orden. 2022. <span>“Python y R En Quarto Con La Encuesta
+Permanente de Hogares.”</span> September 6, 2022.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -959,6 +963,119 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } 
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
