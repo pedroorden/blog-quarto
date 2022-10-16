@@ -13,6 +13,8 @@ format:
 
 **Tecnología y Sociedad** es el soporte y la continuación de un cúmulo de experiencias digitales en materia editorial que confluyen hoy en un mismo blog, creado íntegramente en Quarto, la nueva plataforma de publicación de R.
 
+![](thumbnail.jpg)
+
 ### Motivación
 
 La propuesta de crear este *nuevo jornal sociológico de datos* se basa en tres **ideas-fuerza** de orden general:
@@ -27,4 +29,6 @@ La propuesta de crear este *nuevo jornal sociológico de datos* se basa en tres 
 
 Para optimizar el acceso a los contenidos del blog, los mismos se organizan por categoría y cuentan con un filtro dinámico para buscar temas específicos o palabras clave.
 
-La propuesta será de aquí en más publicar sobre distintos temas con una cierta periodicidad buscando sistematizar experiencias de investigación y formación basadas en R . Vamos por eso!
+La propuesta será de aquí en más publicar sobre distintos temas con una cierta periodicidad buscando sistematizar experiencias de investigación y formación basadas en R .
+
+Vamos por eso!

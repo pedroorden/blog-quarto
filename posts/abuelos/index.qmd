@@ -1,5 +1,5 @@
 ---
-title: "Situaciones de pobreza por ingreso en adultos mayores con R (y Python)"
+title: "Situaciones de pobreza por ingreso en adultos mayores"
 author: "Lic. Pedro Damian Orden"
 date: "2022-10-15"
 categories: [codigo, analisis, tutorial]
