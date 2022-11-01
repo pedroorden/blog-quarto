@@ -8,15 +8,14 @@ image: "image.png"
 format: 
   html:
     toc: true #arma menu
-    code-fold: true #oculta el codigo
+    code-fold: false #oculta el codigo
     code-summary: "Ver código" #leyenda para mostrar codigo
 ---
 
+![](image.png)
 ## Propuesta
 
-![](image.png)
-
-Durante los últimos años, en el campo de la ciencia de datos las denominadas **sports analytics** (analítica de datos deportivos) ha ganado cierta relevancia, dada 1) [la progresiva tendencia hacia la profesionalización de los deportes masivos](https://www.emerald.com/insight/content/doi/10.1108/IJSMS-11-2017-099/full/html), 2) [las nuevas de tecnologías de captura de datos disponibles](https://doi.org/10.1123/jsm.2014-0132), 3) [la incorporación de expertos en tecnologías de la información en equipos y medios de comunicación,](https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2) 4) [la expansión a escala global de los mercados de jugadores,](https://worldfootballsummit.com/understanding-aiscout-and-how-its-revolutionising-football-scouting/) y 5[) el auge de las apuestas en línea](https://rss.onlinelibrary.wiley.com/doi/10.1111/1467-9876.00065), entre los procesos mas destacables, y con ello emergen progresivamente nuevos campos de saber basados en la evidencia y el deporte que pueden proporcionar a quien los analice y modelice una **ventaja competitiva** para con sus rivales.
+Durante los últimos años, en el campo de la ciencia de datos las denominadas **sports analytics** (analítica de datos deportivos) ha ganado cierta relevancia, dada 1) [la progresiva tendencia hacia la profesionalización de los deportes masivos](https://www.emerald.com/insight/content/doi/10.1108/IJSMS-11-2017-099/full/html), 2) [las nuevas de tecnologías de captura de datos disponibles](https://doi.org/10.1123/jsm.2014-0132), 3) [la incorporación de expertos en tecnologías de la información en equipos y medios de comunicación,](https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2) 4) [la expansión a escala global de los mercados de jugadores,](https://worldfootballsummit.com/understanding-aiscout-and-how-its-revolutionising-football-scouting/) y 5[) el auge de las apuestas en línea](https://rss.onlinelibrary.wiley.com/doi/10.1111/1467-9876.00065), entre los procesos mas destacables, y con ello han emergido progresivamente nuevos campos de saber basados en la evidencia y el deporte que pueden proporcionar a quien los analice y modelice una **ventaja competitiva** para con sus rivales.
 
 Las posibles entradas a la temática son múltiples, por lo que la invitación aquí es a explorar las posibilidades que brinda R en general para trabajar con datos, y en particular, para analizar una gama amplia información proveniente de deportes de alta competencia.
 
@@ -34,7 +33,7 @@ Para obtener la data de las competencias y/o jugadores que sean pertinentes a lo
 
 A lo largo de este documento veremos algunas de sus funcionalidades combinadas con técnicas de transformación de datos sobre casos concretos: el análisis de una liga, el scouting de un jugador o la exploración de la colección histórica de datos del mundial.
 
-Cabe resaltar que el funcionamiento del paquete se basa en consultas a bases de datos de terceros. Para nuestro tutorial utilizaremos aquellas funciones que nos permiten conectarnos con las bases de [FBREF](https://fbref.com/es/), un portal de estadísticas de fútbol líder en el segmento, pero también pueden consultarse las bases de [Transfermarkt](https://www.transfermarkt.com/), [Understat](https://understat.com/) y [Fotmob](https://www.fotmob.com/).
+Cabe resaltar que el funcionamiento del paquete se basa en consultas a bases de datos de terceros. Para nuestro tutorial utilizaremos aquellas funciones que nos permiten conectarnos con las bases de [FBREF](https://fbref.com/es/), un portal de estadísticas de fútbol líder en el segmento. También pueden consultarse las bases de [Transfermarkt](https://www.transfermarkt.com/), [Understat](https://understat.com/) y [Fotmob](https://www.fotmob.com/).
 
 ### Descarga de los datos
 
@@ -65,6 +64,8 @@ messi_stats <- fb_player_season_stats(
 messi_stats <- openxlsx::read.xlsx("messi_stats.xlsx")
 ```
 
+Exploramos nuestros datos con la función glimpse de tidyverse (dplyr)
+
 ```{r}
 glimpse(messi_stats)
 ```
@@ -87,7 +88,7 @@ messi_stats%>%
              subtitle = "Estadisticas por temporada en La Liga 2004-2021")
 ```
 
-Un punto destacable de este paquete es que podemos acceder a datos muy puntuales, como todas aquellas incidencias relacionadas con las **oportunidades de tiro** de un jugador o jugadora por campeonato y/o temporada. Veamos a continuación el ratio de goles convertidos por la cantidad de tiros al arco pateados por Messi jugando en la Champions Legue entre 2004 y 2022.
+Un punto destacable de este paquete es que podemos acceder a datos muy puntuales, como por ejemplo todas aquellas incidencias relacionadas con las **oportunidades de tiro** de un jugador o jugadora por campeonato y/o temporada. Veamos a continuación el ratio de goles convertidos por la cantidad de tiros al arco pateados por Messi jugando en la Champions Legue entre 2004 y 2022.
 
 ```{r eval= FALSE}
 messi_tiros <- fb_player_season_stats("https://fbref.com/en/players/d70ce98e/Lionel-Messi", stat_type = 'shooting')
@@ -99,7 +100,7 @@ messi_tiros <- fb_player_season_stats("https://fbref.com/en/players/d70ce98e/Lio
 messi_tiros <- openxlsx::read.xlsx("messi_tiros.xlsx")
 ```
 
-```{r}
+```{r out.width="100%"}
 tiroschampion<-messi_tiros%>%
   filter(Comp=="1. Champions Lg")
   
@@ -204,7 +205,7 @@ Podremos preguntarnos cuantos puntos sacó Boca en el último torneo?
 ```{r}
 #si!
 boca%>%
-  summarise(resumen=sum(puntos_obtenidos))
+  summarise(puntos=sum(puntos_obtenidos))
 
 ```
 
@@ -227,7 +228,7 @@ boca %>%
 
 Por último grafiquemos la progresión de puntos obtenidos fecha a fecha por el conjunto de la rivera durante el último torneo.
 
-```{r}
+```{r out.width="100%"}
 
 boca<-boca%>%
   mutate(cumsum = cumsum(puntos_obtenidos), #puntos acumulados
@@ -292,7 +293,7 @@ mundiales_tidy%>%
 
 Grafiquemos nuestros resultados, vamos usar el eje Y para dar cuenta del público, y en un eje Y secundario para imprimir los datos de los goles.
 
-```{r}
+```{r out.width="100%"}
 mundiales_tidy%>%
   ungroup()%>%
   ggplot() +
@@ -317,13 +318,13 @@ mundiales_tidy%>%
 
 A lo largo de esta experiencia pudimos adentrarnos la múltiples posibilidades que nos brinda R para recopilar y explorar datos de fútbol utilizando el paquete worldfootballR. Llevando adelante técnicas EDA y de análisis descriptivo pudimos respondernos algunas preguntas sistematizando distintos conjuntos de datos descargados en cápsulas de información relevante, la materia prima que alimenta los procesos de analítica descriptiva.
 
-Será destacable mencionar que este tipo de experiencias aplicadas no sólo son últiles para el análisis de procesos deportivos en sí, sino que además pueden coadyuvar a robustecer las habilidades de procesamiento e indagación con datos de analistas en formación, ya que se trata de técnicas amenas que constelan con abordajes de realidades gamificadas y cercanas .
+Será destacable mencionar que este tipo de experiencias aplicadas no sólo son últiles para el análisis de procesos deportivos en sí, sino que además pueden volver mas cercanos aprendizajes relativos al procesamiento e indagación con datos, ya que se trata de técnicas amenas que constelan con abordajes de realidades gamificadas y cercanas, al ser por ejemplo el fútbol un deporte de gran impacto popular.
 
-En suma, las sports analytics hoy son una realidad en el mundo del análisis y ciencia de datos, pueden ser una interesante puerta de entrada para los principiantes o una profesión rentable para los analistas profesionales...un momento...qué podemos saber sobre el Mundial de Qatar 2022?
+En suma, las sports analytics hoy son una realidad en el mundo del análisis y ciencia de datos, pueden ser una interesante puerta de entrada para quienes se están iniciando o una profesión rentable para los analistas profesionales...un momento...y el Mundial de Qatar 2022?
 
 Continuará.
 
-## Bibliografía:
+## Bibliografía consultada:
 
 Extracting data from FBref : https://jaseziv.github.io/worldfootballR/articles/extract-fbref-data.html
 
@@ -333,6 +334,3 @@ Sport Analytics: A Review: https://www.academia.edu/73063599/Sport_Analytics_A\_
 
 Big data and tactical analysis in elite soccer: future challenges and opportunities for sports science. https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2\
 
-\
-
-\
