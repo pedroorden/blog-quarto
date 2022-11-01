@@ -1,0 +1,338 @@
+---
+title: "Sports Analytics con R: explorando datos de Fútbol"
+subtitle: "Integración práctica de técnicas EDA"
+author: "Pedro Damian Orden"
+date: "2022-11-02"
+categories: [codigo, tutorial]
+image: "image.png"
+format: 
+  html:
+    toc: true #arma menu
+    code-fold: true #oculta el codigo
+    code-summary: "Ver código" #leyenda para mostrar codigo
+---
+
+## Propuesta
+
+![](image.png)
+
+Durante los últimos años, en el campo de la ciencia de datos las denominadas **sports analytics** (analítica de datos deportivos) ha ganado cierta relevancia, dada 1) [la progresiva tendencia hacia la profesionalización de los deportes masivos](https://www.emerald.com/insight/content/doi/10.1108/IJSMS-11-2017-099/full/html), 2) [las nuevas de tecnologías de captura de datos disponibles](https://doi.org/10.1123/jsm.2014-0132), 3) [la incorporación de expertos en tecnologías de la información en equipos y medios de comunicación,](https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2) 4) [la expansión a escala global de los mercados de jugadores,](https://worldfootballsummit.com/understanding-aiscout-and-how-its-revolutionising-football-scouting/) y 5[) el auge de las apuestas en línea](https://rss.onlinelibrary.wiley.com/doi/10.1111/1467-9876.00065), entre los procesos mas destacables, y con ello emergen progresivamente nuevos campos de saber basados en la evidencia y el deporte que pueden proporcionar a quien los analice y modelice una **ventaja competitiva** para con sus rivales.
+
+Las posibles entradas a la temática son múltiples, por lo que la invitación aquí es a explorar las posibilidades que brinda R en general para trabajar con datos, y en particular, para analizar una gama amplia información proveniente de deportes de alta competencia.
+
+Específicamente, utilizaremos técnicas [EDA](https://www.ibm.com/es-es/cloud/learn/exploratory-data-analysis) aplicadas a datos del **fútbol** nacional e internacional para dar nuestros *primeros pasos en la escena de la analítica deportiva*.
+
+Comencemos.
+
+## Recopilando datos de Fútbol
+
+Como muchos otros datos con los que trabajamos, los relacionados con fútbol no se encuentran dispuestos de manera ágil o sencilla para que podamos analizarlos, debemos *capturarlos* de alguna forma.
+
+### El paquete de referencia: worldfootballR
+
+Para obtener la data de las competencias y/o jugadores que sean pertinentes a los objetivos de nuestro análisis, utilizaremos [worldfootballR](https://jaseziv.github.io/worldfootballR/index.html), uno de los paquetes mas completos que existen en la actualidad sobre fútbol desarrollados por la comunidad de R.
+
+A lo largo de este documento veremos algunas de sus funcionalidades combinadas con técnicas de transformación de datos sobre casos concretos: el análisis de una liga, el scouting de un jugador o la exploración de la colección histórica de datos del mundial.
+
+Cabe resaltar que el funcionamiento del paquete se basa en consultas a bases de datos de terceros. Para nuestro tutorial utilizaremos aquellas funciones que nos permiten conectarnos con las bases de [FBREF](https://fbref.com/es/), un portal de estadísticas de fútbol líder en el segmento, pero también pueden consultarse las bases de [Transfermarkt](https://www.transfermarkt.com/), [Understat](https://understat.com/) y [Fotmob](https://www.fotmob.com/).
+
+### Descarga de los datos
+
+Comenzamos instalando y levantando **worldfootballR**, junto al resto de paquetes de trabajo.
+
+```{r warning=FALSE}
+## install.packages("worldfootballR")
+library(worldfootballR)
+library(tidyverse)#para manipular nuestros datos
+library(gt)#para hacer tablas
+```
+
+### Apartado para jugadores
+
+Para requerir los datos individuales de Lionel Messi pasamos la función *fb_player_season_stats* al link del jugador en [fbref](https://fbref.com/en/players/d70ce98e/Lionel-Messi) y obtendremos un df con datos históricos sobre distintos tipos de incidencias en la carrera del astro argentino.
+
+```{r warning = FALSE, eval = FALSE}
+messi_stats <- fb_player_season_stats(
+  "https://fbref.com/en/players/d70ce98e/Lionel-Messi", 
+  stat_type = 'standard') # se pueden elegir otro tipo de estadisticas, aquí elegimos las estándar, podriamos probar con 'misc'.
+
+#podemos guardar nuestros datos sobre messi en un excel si quisieramos
+#library(openxlsx)
+#write.xlsx(messi_stats, 'messi_stats.xlsx')
+```
+
+```{r include = FALSE}
+messi_stats <- openxlsx::read.xlsx("messi_stats.xlsx")
+```
+
+```{r}
+glimpse(messi_stats)
+```
+
+Las 32 variables del dataset recojen las principales estadísticas del jugador por temporada y competencia. Cabrá destacar que las mismas son sólo de partidos de Liga y Champions League, no incorporando por ejemplo datos sobre la Copa del Rey, competición que Lio disputó y ganó durante su estadía en el Barcelona.
+
+Con los datos disponibles, creamos un cuadro que resume, por temporada, los goles, pases, asistencias y penales convertidos por Lio en la liga doméstica de España:
+
+```{r}
+messi_stats%>%
+  filter(Squad=="Barcelona" & Comp== "1. La Liga")%>%
+  select(Season, MP, Gls, Ast, PK)%>%
+  rename(Temporada=Season,
+         Partidos=MP, 
+         Goles=Gls, 
+         Asistencias=Ast, 
+         Penales=PK)%>%
+  gt()%>%
+  tab_header(title = "Lionel Messi en Barcelona",
+             subtitle = "Estadisticas por temporada en La Liga 2004-2021")
+```
+
+Un punto destacable de este paquete es que podemos acceder a datos muy puntuales, como todas aquellas incidencias relacionadas con las **oportunidades de tiro** de un jugador o jugadora por campeonato y/o temporada. Veamos a continuación el ratio de goles convertidos por la cantidad de tiros al arco pateados por Messi jugando en la Champions Legue entre 2004 y 2022.
+
+```{r eval= FALSE}
+messi_tiros <- fb_player_season_stats("https://fbref.com/en/players/d70ce98e/Lionel-Messi", stat_type = 'shooting')
+
+#write.xlsx(messi_tiros, 'messi_tiros.xlsx')
+```
+
+```{r include = FALSE}
+messi_tiros <- openxlsx::read.xlsx("messi_tiros.xlsx")
+```
+
+```{r}
+tiroschampion<-messi_tiros%>%
+  filter(Comp=="1. Champions Lg")
+  
+ggplot(tiroschampion) +
+  aes(x = Season, y = G_per_SoT_Standard) +
+  geom_col(fill = "#A8B9D9") +
+  labs(
+    x = "Temporada",
+    y = "goles/tiros al arco",
+    title = "Lionel Messi en la Champions League 2004/2022",
+    subtitle = "Ratio de goles convertidos por disparos al arcos",
+    caption= "T&S en base a datos de fbref.com. Año 2022.") +
+  geom_text(aes(label=G_per_SoT_Standard))+
+  theme(axis.text.x = element_text(angle = 35))
+
+
+```
+
+*Resulta significativa la efectividad de Messi en la última temporada no?*
+
+Para concluir el apartado de datos individuales, avanzaremos en la creación de una **comparativa**, requiriendo en simultáneo datos sobre los minutos jugados por [Messi y Ronaldo]{.ul} en la temporada 2022-2023, considerando los partidos de liga y copa internacional (Champions o UEFA dependiendiendo el caso). Nos interesa saber cómo llegan ambos al mundial de Qatar en lo que respecta a ritmo futbolístico y tiempo en cancha.
+
+```{r eval = FALSE}
+
+#pasamos la funcion fb_player_season_stats al vector de messi y ronaldo.
+jugadores <- fb_player_season_stats(player_url = c("https://fbref.com/en/players/d70ce98e/Lionel-Messi", "https://fbref.com/en/players/dea698d9/Cristiano-Ronaldo"), stat_type = "playing_time")#datos de tiempo de juego
+
+
+#openxlsx::write.xlsx(jugadores, 'jugadores.xlsx')
+
+```
+
+```{r include=FALSE}
+jugadores<-openxlsx::read.xlsx("jugadores.xlsx")
+```
+
+```{r}
+jugadores%>%
+  filter(Season=="2022-2023")%>%
+  group_by(player_name)%>%
+  summarise(partidos_tot=sum(MP), 
+            min_tot= sum(Min_Time),
+            min_prom= min_tot/partidos_tot)%>%
+    mutate_if(is.numeric, round, digits=1)%>%
+  gt()
+
+```
+
+En una primera vista, podríamos decir que en los últimos tiempos Messi jugó más que Ronaldo, participando de más partidos y siendo parte de los mismos durante más tiempo.
+
+### Ligas y partidos
+
+Otra posibilidad que nos brinda el paquete es recopilar, fecha a fecha, los partidos de una liga particular y sus incidencias.
+
+Pongamos nuestra atención en último [torneo argentino de primera división]{.ul}. Para ello vamos a recopilar mediante la funcion *fb_match_urls* los links de fbref con los datos de los partidos y vamos a guardarlos en el objeto primera_division.
+
+Al objeto primera división podremos pedirle campos detallados de estadísticas de goles, tiros al arco, pases, posesión y más. En este caso requeriremos un summary, o resumen, del torneo. Para ello utilizaremos la función *fb_advanced_match_stats.*
+
+```{r  eval=FALSE}
+
+fb_match_urls recopila los links cada partido en la base de fbstats
+primera_division <- fb_match_urls(country = "ARG", #liga arg
+                               gender = "M", #masculino
+                               season_end_year = 2022, #temporada
+                               tier="1st")
+
+# #recuperamos las estadisticas avanzadas
+
+primera_resumen <- fb_advanced_match_stats(match_url = primera_division,
+                                                       stat_type = "summary",
+                                                       team_or_player = "team")
+
+```
+
+```{r include=FALSE}
+primera<-readRDS("primera_division.rds")
+
+```
+
+```{r}
+glimpse(primera)
+```
+
+La cantidad de datos que nos proveemos con el campo de consulta *summary* es significativa. Hagamos una transformación de nuestro conjunto de datos para establecer el resultado de los partidos jugados por el club Boca Juniors según la condición de local y visitante.
+
+```{r}
+boca<-primera%>%
+  filter(Team=="Boca Juniors")%>% #filtamos el equipo
+  select(Match_Date, Home_Team, 
+         Away_Team, Home_Score, 
+         Away_Score, Home_Away)%>%
+  mutate(puntos_obtenidos=case_when(Home_Away=="Home" & Home_Score>Away_Score ~3,
+                           Home_Away=="Home" & Home_Score<Away_Score~0,
+                           Home_Away=="Away" & Home_Score>Away_Score~0,
+                           Home_Away=="Away" & Home_Score<Away_Score~3,
+                           Home_Score==Away_Score~1))
+
+```
+
+Podremos preguntarnos cuantos puntos sacó Boca en el último torneo?
+
+```{r}
+#si!
+boca%>%
+  summarise(resumen=sum(puntos_obtenidos))
+
+```
+
+Y cual fue la performance de Boca de local y visitante?
+
+```{r}
+#Tambien!
+library(janitor)
+
+boca %>%
+  tabyl(Home_Away, puntos_obtenidos)%>%
+  adorn_totals("row") %>%
+  adorn_percentages("row") %>%
+  adorn_pct_formatting() %>%
+  adorn_ns() %>%
+  adorn_title("combined")
+```
+
+*Podremos observar que el equipo sumó más puntos de local ganando más partidos y perdiendo menos que de visitante.*
+
+Por último grafiquemos la progresión de puntos obtenidos fecha a fecha por el conjunto de la rivera durante el último torneo.
+
+```{r}
+
+boca<-boca%>%
+  mutate(cumsum = cumsum(puntos_obtenidos), #puntos acumulados
+         fecha=as.Date(Match_Date))
+
+boca%>%
+  ggplot() +
+  aes(x = fecha, y = cumsum) +
+  geom_point(shape = "circle", size = 1.7, colour = "#4682B4") +
+  geom_line(size = 0.5, colour = "steelblue") +
+    scale_x_date(date_labels = "%b/%d", 
+                 date_breaks= "week")+
+  labs(
+    x = "Semana",
+    y = "Puntaje",
+    title = "Boca Juniors: Progresión de puntos obtenidos en la liga 2022",
+    subtitle = "Primera División.",
+    caption = "Tecnología y Sociedad en base a datos de FBStats. Año 2022"
+  ) +
+  ggthemes::theme_stata()+
+  theme(axis.text.x = element_text(angle = 90))
+
+```
+
+### Historial de Mundiales
+
+Como último elemento de nuestra exploración con R en el campo de las sports analytics, utilizaremos la función *load_match_comp_results* para recuperar en un dataframe los resultados históricos de los mundiales femeninos de fútbol.
+
+```{r eval=FALSE}
+mundiales_w <- load_match_comp_results(comp_name = "FIFA Women's World Cup")
+
+#openxlsx::write.xlsx(mundiales_w, 'mundiales_w.xlsx') 
+
+```
+
+```{r include=FALSE}
+mundiales_w <- openxlsx::read.xlsx("mundiales_w.xlsx")
+
+```
+
+```{r}
+dplyr::glimpse(mundiales_w)
+```
+
+Cuantos goles se anotaron en lo mundiales femeninos torneo a torneo? Cómo evolucionó la cantidad de asistentes por torneo?
+
+```{r}
+
+mundiales_tidy <- mundiales_w%>%
+  select(Season_End_Year, HomeGoals, AwayGoals, Attendance)%>%
+  mutate(goles=HomeGoals+AwayGoals)%>%
+  group_by(Season_End_Year)%>%
+  summarise(goles_total=sum(goles),
+            asistentes=sum(Attendance, na.rm = TRUE))%>%
+  mutate(fecha=as.factor(Season_End_Year))%>%
+  select(!Season_End_Year)
+
+mundiales_tidy%>%
+  gt()
+
+```
+
+Grafiquemos nuestros resultados, vamos usar el eje Y para dar cuenta del público, y en un eje Y secundario para imprimir los datos de los goles.
+
+```{r}
+mundiales_tidy%>%
+  ungroup()%>%
+  ggplot() +
+  geom_bar(aes(x=fecha, y=asistentes), 
+           stat="identity", fill="#9BCD9B", alpha=0.7, group = 1)+
+  geom_line(aes(x=fecha, y=goles_total*10000), size=1.2,
+            stat="identity", color="#278AFC", group = 2)+
+  geom_point(aes(x=fecha, y=goles_total*10000), size=2,
+            stat="identity", color="#0364D4", alpha=0.5 ,group = 2)+
+  labs(title= "Espectadores y Goles por Mundial Femenino disputado",
+       subtitle = "Período 1991-2019.",
+       x="Torneo",
+       y="Espectadores",
+       caption = "T&S en base a datos de fbref.com. Año 2022.")+
+  scale_y_continuous(sec.axis=sec_axis(~.*0.0001,
+                                       name="Goles"))
+
+
+```
+
+## Conclusiones
+
+A lo largo de esta experiencia pudimos adentrarnos la múltiples posibilidades que nos brinda R para recopilar y explorar datos de fútbol utilizando el paquete worldfootballR. Llevando adelante técnicas EDA y de análisis descriptivo pudimos respondernos algunas preguntas sistematizando distintos conjuntos de datos descargados en cápsulas de información relevante, la materia prima que alimenta los procesos de analítica descriptiva.
+
+Será destacable mencionar que este tipo de experiencias aplicadas no sólo son últiles para el análisis de procesos deportivos en sí, sino que además pueden coadyuvar a robustecer las habilidades de procesamiento e indagación con datos de analistas en formación, ya que se trata de técnicas amenas que constelan con abordajes de realidades gamificadas y cercanas .
+
+En suma, las sports analytics hoy son una realidad en el mundo del análisis y ciencia de datos, pueden ser una interesante puerta de entrada para los principiantes o una profesión rentable para los analistas profesionales...un momento...qué podemos saber sobre el Mundial de Qatar 2022?
+
+Continuará.
+
+## Bibliografía:
+
+Extracting data from FBref : https://jaseziv.github.io/worldfootballR/articles/extract-fbref-data.html
+
+Football Analytics: Creating an xG-xGA comparison chart in R : https://www.invertedwinger.com/football-analytics-creating-an-xg-xga-comparison-chart-in-r/
+
+Sport Analytics: A Review: https://www.academia.edu/73063599/Sport_Analytics_A\_Review
+
+Big data and tactical analysis in elite soccer: future challenges and opportunities for sports science. https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2\
+
+\
+
+\

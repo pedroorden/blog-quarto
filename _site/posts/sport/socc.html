@@ -1,0 +1,2283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pedro Damian Orden">
+<meta name="dcterms.date" content="2022-11-02">
+
+<title>Tec &amp; Soc. - Sports Analytics con R: explorando datos de Fútbol</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Tec &amp; Soc.</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pedroorden/"><i class="bi bi-linkedin" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pedroorden"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://independent.academia.edu/PedroOrden"><i class="bi bi-book" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Sports Analytics con R: explorando datos de Fútbol</h1>
+            <p class="subtitle lead">Integración práctica de técnicas EDA</p>
+                                <div class="quarto-categories">
+                <div class="quarto-category">codigo</div>
+                <div class="quarto-category">tutorial</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Pedro Damian Orden </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 2, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#propuesta" id="toc-propuesta" class="nav-link active" data-scroll-target="#propuesta">Propuesta</a></li>
+  <li><a href="#recopilando-datos-de-fútbol" id="toc-recopilando-datos-de-fútbol" class="nav-link" data-scroll-target="#recopilando-datos-de-fútbol">Recopilando datos de Fútbol</a>
+  <ul class="collapse">
+  <li><a href="#el-paquete-de-referencia-worldfootballr" id="toc-el-paquete-de-referencia-worldfootballr" class="nav-link" data-scroll-target="#el-paquete-de-referencia-worldfootballr">El paquete de referencia: worldfootballR</a></li>
+  <li><a href="#descarga-de-los-datos" id="toc-descarga-de-los-datos" class="nav-link" data-scroll-target="#descarga-de-los-datos">Descarga de los datos</a></li>
+  <li><a href="#apartado-para-jugadores" id="toc-apartado-para-jugadores" class="nav-link" data-scroll-target="#apartado-para-jugadores">Apartado para jugadores</a></li>
+  <li><a href="#ligas-y-partidos" id="toc-ligas-y-partidos" class="nav-link" data-scroll-target="#ligas-y-partidos">Ligas y partidos</a></li>
+  <li><a href="#historial-de-mundiales" id="toc-historial-de-mundiales" class="nav-link" data-scroll-target="#historial-de-mundiales">Historial de Mundiales</a></li>
+  </ul></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones">Conclusiones</a></li>
+  <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía:</a></li>
+  </ul>
+</nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="propuesta" class="level2">
+<h2 class="anchored" data-anchor-id="propuesta">Propuesta</h2>
+<p><img src="image.png" class="img-fluid"></p>
+<p>Durante los últimos años, en el campo de la ciencia de datos las denominadas <strong>sports analytics</strong> (analítica de datos deportivos) ha ganado cierta relevancia, dada 1) <a href="https://www.emerald.com/insight/content/doi/10.1108/IJSMS-11-2017-099/full/html">la progresiva tendencia hacia la profesionalización de los deportes masivos</a>, 2) <a href="https://doi.org/10.1123/jsm.2014-0132">las nuevas de tecnologías de captura de datos disponibles</a>, 3) <a href="https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2">la incorporación de expertos en tecnologías de la información en equipos y medios de comunicación,</a> 4) <a href="https://worldfootballsummit.com/understanding-aiscout-and-how-its-revolutionising-football-scouting/">la expansión a escala global de los mercados de jugadores,</a> y 5<a href="https://rss.onlinelibrary.wiley.com/doi/10.1111/1467-9876.00065">) el auge de las apuestas en línea</a>, entre los procesos mas destacables, y con ello emergen progresivamente nuevos campos de saber basados en la evidencia y el deporte que pueden proporcionar a quien los analice y modelice una <strong>ventaja competitiva</strong> para con sus rivales.</p>
+<p>Las posibles entradas a la temática son múltiples, por lo que la invitación aquí es a explorar las posibilidades que brinda R en general para trabajar con datos, y en particular, para analizar una gama amplia información proveniente de deportes de alta competencia.</p>
+<p>Específicamente, utilizaremos técnicas <a href="https://www.ibm.com/es-es/cloud/learn/exploratory-data-analysis">EDA</a> aplicadas a datos del <strong>fútbol</strong> nacional e internacional para dar nuestros <em>primeros pasos en la escena de la analítica deportiva</em>.</p>
+<p>Comencemos.</p>
+</section>
+<section id="recopilando-datos-de-fútbol" class="level2">
+<h2 class="anchored" data-anchor-id="recopilando-datos-de-fútbol">Recopilando datos de Fútbol</h2>
+<p>Como muchos otros datos con los que trabajamos, los relacionados con fútbol no se encuentran dispuestos de manera ágil o sencilla para que podamos analizarlos, debemos <em>capturarlos</em> de alguna forma.</p>
+<section id="el-paquete-de-referencia-worldfootballr" class="level3">
+<h3 class="anchored" data-anchor-id="el-paquete-de-referencia-worldfootballr">El paquete de referencia: worldfootballR</h3>
+<p>Para obtener la data de las competencias y/o jugadores que sean pertinentes a los objetivos de nuestro análisis, utilizaremos <a href="https://jaseziv.github.io/worldfootballR/index.html">worldfootballR</a>, uno de los paquetes mas completos que existen en la actualidad sobre fútbol desarrollados por la comunidad de R.</p>
+<p>A lo largo de este documento veremos algunas de sus funcionalidades combinadas con técnicas de transformación de datos sobre casos concretos: el análisis de una liga, el scouting de un jugador o la exploración de la colección histórica de datos del mundial.</p>
+<p>Cabe resaltar que el funcionamiento del paquete se basa en consultas a bases de datos de terceros. Para nuestro tutorial utilizaremos aquellas funciones que nos permiten conectarnos con las bases de <a href="https://fbref.com/es/">FBREF</a>, un portal de estadísticas de fútbol líder en el segmento, pero también pueden consultarse las bases de <a href="https://www.transfermarkt.com/">Transfermarkt</a>, <a href="https://understat.com/">Understat</a> y <a href="https://www.fotmob.com/">Fotmob</a>.</p>
+</section>
+<section id="descarga-de-los-datos" class="level3">
+<h3 class="anchored" data-anchor-id="descarga-de-los-datos">Descarga de los datos</h3>
+<p>Comenzamos instalando y levantando <strong>worldfootballR</strong>, junto al resto de paquetes de trabajo.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## install.packages("worldfootballR")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(worldfootballR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)<span class="co">#para manipular nuestros datos</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)<span class="co">#para hacer tablas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="apartado-para-jugadores" class="level3">
+<h3 class="anchored" data-anchor-id="apartado-para-jugadores">Apartado para jugadores</h3>
+<p>Para requerir los datos individuales de Lionel Messi pasamos la función <em>fb_player_season_stats</em> al link del jugador en <a href="https://fbref.com/en/players/d70ce98e/Lionel-Messi">fbref</a> y obtendremos un df con datos históricos sobre distintos tipos de incidencias en la carrera del astro argentino.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>messi_stats <span class="ot">&lt;-</span> <span class="fu">fb_player_season_stats</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://fbref.com/en/players/d70ce98e/Lionel-Messi"</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">stat_type =</span> <span class="st">'standard'</span>) <span class="co"># se pueden elegir otro tipo de estadisticas, aquí elegimos las estándar, podriamos probar con 'misc'.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#podemos guardar nuestros datos sobre messi en un excel si quisieramos</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#library(openxlsx)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#write.xlsx(messi_stats, 'messi_stats.xlsx')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(messi_stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 54
+Columns: 32
+$ player_name                &lt;chr&gt; "Lionel Messi", "Lionel Messi", "Lionel Mes~
+$ player_url                 &lt;chr&gt; "https://fbref.com/en/players/d70ce98e/Lion~
+$ Season                     &lt;chr&gt; "2004-2005", "2004-2005", "2005-2006", "200~
+$ Age                        &lt;dbl&gt; 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22,~
+$ Squad                      &lt;chr&gt; "Barcelona", "Barcelona", "Barcelona", "Bar~
+$ Country                    &lt;chr&gt; "", "ESP", "", "ESP", "", "ESP", "", "ESP",~
+$ Comp                       &lt;chr&gt; "1. Champions Lg", "1. La Liga", "1. Champi~
+$ MP                         &lt;dbl&gt; 1, 7, 6, 17, 5, 26, 9, 27, 12, 31, 11, 35, ~
+$ Starts_Time                &lt;dbl&gt; 1, 0, 4, 11, 4, 23, 9, 23, 10, 27, 11, 30, ~
+$ Min_Time                   &lt;dbl&gt; 90, 70, 322, 911, 385, 1983, 728, 1973, 927~
+$ Mins_Per_90_Time           &lt;dbl&gt; 1.0, 0.8, 3.6, 10.1, 4.3, 22.0, 8.1, 21.9, ~
+$ Gls                        &lt;dbl&gt; 0, 1, 1, 6, 1, 14, 6, 10, 9, 23, 8, 34, 12,~
+$ Ast                        &lt;dbl&gt; 0, 0, 1, 3, 0, 3, 2, 12, 5, 11, 0, 9, 3, 19~
+$ G_minus_PK                 &lt;dbl&gt; 0, 1, 1, 6, 1, 14, 5, 6, 9, 20, 8, 33, 11, ~
+$ PK                         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 1, 4, 0, 3, 0, 1, 1, 4, 4~
+$ PKatt                      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 1, 4, 0, 4, 0, 1, 2, 4, 5~
+$ CrdY                       &lt;dbl&gt; 0, 0, 0, 2, 1, 2, 2, 2, 1, 2, 0, 3, 0, 3, 2~
+$ CrdR                       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0~
+$ Gls_Per_Minutes            &lt;dbl&gt; 0.00, 1.29, 0.28, 0.59, 0.23, 0.64, 0.74, 0~
+$ Ast_Per_Minutes            &lt;dbl&gt; 0.00, 0.00, 0.28, 0.30, 0.00, 0.14, 0.25, 0~
+$ `G+A_Per_Minutes`          &lt;dbl&gt; 0.00, 1.29, 0.56, 0.89, 0.23, 0.77, 0.99, 1~
+$ G_minus_PK_Per_Minutes     &lt;dbl&gt; 0.00, 1.29, 0.28, 0.59, 0.23, 0.64, 0.62, 0~
+$ `G+A_minus_PK_Per_Minutes` &lt;dbl&gt; 0.00, 1.29, 0.56, 0.89, 0.23, 0.77, 0.87, 0~
+$ xG_Expected                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ npxG_Expected              &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ xAG_Expected               &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ `npxG+xAG_Expected`        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ xG_Per_Minutes             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ xAG_Per_Minutes            &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ `xG+xAG_Per_Minutes`       &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ npxG_Per_Minutes           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~
+$ `npxG+xAG_Per_Minutes`     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,~</code></pre>
+</div>
+</div>
+<p>Las 32 variables del dataset recojen las principales estadísticas del jugador por temporada y competencia. Cabrá destacar que las mismas son sólo de partidos de Liga y Champions League, no incorporando por ejemplo datos sobre la Copa del Rey, competición que Lio disputó y ganó durante su estadía en el Barcelona.</p>
+<p>Con los datos disponibles, creamos un cuadro que resume, por temporada, los goles, pases, asistencias y penales convertidos por Lio en la liga doméstica de España:</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>messi_stats<span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Squad<span class="sc">==</span><span class="st">"Barcelona"</span> <span class="sc">&amp;</span> Comp<span class="sc">==</span> <span class="st">"1. La Liga"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Season, MP, Gls, Ast, PK)<span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Temporada=</span>Season,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Partidos=</span>MP, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Goles=</span>Gls, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Asistencias=</span>Ast, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">Penales=</span>PK)<span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Lionel Messi en Barcelona"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"Estadisticas por temporada en La Liga 2004-2021"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="jnlnifyykc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+:where(#jnlnifyykc) .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+:where(#jnlnifyykc) .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+:where(#jnlnifyykc) .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+:where(#jnlnifyykc) .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+:where(#jnlnifyykc) .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+:where(#jnlnifyykc) .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+:where(#jnlnifyykc) .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+:where(#jnlnifyykc) .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+:where(#jnlnifyykc) .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+:where(#jnlnifyykc) .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+:where(#jnlnifyykc) .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+:where(#jnlnifyykc) .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+:where(#jnlnifyykc) .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#jnlnifyykc) .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+:where(#jnlnifyykc) .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+:where(#jnlnifyykc) .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#jnlnifyykc) .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+:where(#jnlnifyykc) .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#jnlnifyykc) .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+:where(#jnlnifyykc) .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#jnlnifyykc) .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#jnlnifyykc) .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#jnlnifyykc) .gt_left {
+  text-align: left;
+}
+
+:where(#jnlnifyykc) .gt_center {
+  text-align: center;
+}
+
+:where(#jnlnifyykc) .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+:where(#jnlnifyykc) .gt_font_normal {
+  font-weight: normal;
+}
+
+:where(#jnlnifyykc) .gt_font_bold {
+  font-weight: bold;
+}
+
+:where(#jnlnifyykc) .gt_font_italic {
+  font-style: italic;
+}
+
+:where(#jnlnifyykc) .gt_super {
+  font-size: 65%;
+}
+
+:where(#jnlnifyykc) .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+:where(#jnlnifyykc) .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+:where(#jnlnifyykc) .gt_indent_1 {
+  text-indent: 5px;
+}
+
+:where(#jnlnifyykc) .gt_indent_2 {
+  text-indent: 10px;
+}
+
+:where(#jnlnifyykc) .gt_indent_3 {
+  text-indent: 15px;
+}
+
+:where(#jnlnifyykc) .gt_indent_4 {
+  text-indent: 20px;
+}
+
+:where(#jnlnifyykc) .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <td colspan="5" class="gt_heading gt_title gt_font_normal" style="">Lionel Messi en Barcelona</td>
+    </tr>
+    <tr>
+      <td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Estadisticas por temporada en La Liga 2004-2021</td>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Temporada</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Partidos</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Goles</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Asistencias</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Penales</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_right">2004-2005</td>
+<td class="gt_row gt_right">7</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_right">0</td></tr>
+    <tr><td class="gt_row gt_right">2005-2006</td>
+<td class="gt_row gt_right">17</td>
+<td class="gt_row gt_right">6</td>
+<td class="gt_row gt_right">3</td>
+<td class="gt_row gt_right">0</td></tr>
+    <tr><td class="gt_row gt_right">2006-2007</td>
+<td class="gt_row gt_right">26</td>
+<td class="gt_row gt_right">14</td>
+<td class="gt_row gt_right">3</td>
+<td class="gt_row gt_right">0</td></tr>
+    <tr><td class="gt_row gt_right">2007-2008</td>
+<td class="gt_row gt_right">27</td>
+<td class="gt_row gt_right">10</td>
+<td class="gt_row gt_right">12</td>
+<td class="gt_row gt_right">4</td></tr>
+    <tr><td class="gt_row gt_right">2008-2009</td>
+<td class="gt_row gt_right">31</td>
+<td class="gt_row gt_right">23</td>
+<td class="gt_row gt_right">11</td>
+<td class="gt_row gt_right">3</td></tr>
+    <tr><td class="gt_row gt_right">2009-2010</td>
+<td class="gt_row gt_right">35</td>
+<td class="gt_row gt_right">34</td>
+<td class="gt_row gt_right">9</td>
+<td class="gt_row gt_right">1</td></tr>
+    <tr><td class="gt_row gt_right">2010-2011</td>
+<td class="gt_row gt_right">33</td>
+<td class="gt_row gt_right">31</td>
+<td class="gt_row gt_right">19</td>
+<td class="gt_row gt_right">4</td></tr>
+    <tr><td class="gt_row gt_right">2011-2012</td>
+<td class="gt_row gt_right">37</td>
+<td class="gt_row gt_right">50</td>
+<td class="gt_row gt_right">16</td>
+<td class="gt_row gt_right">10</td></tr>
+    <tr><td class="gt_row gt_right">2012-2013</td>
+<td class="gt_row gt_right">32</td>
+<td class="gt_row gt_right">46</td>
+<td class="gt_row gt_right">11</td>
+<td class="gt_row gt_right">4</td></tr>
+    <tr><td class="gt_row gt_right">2013-2014</td>
+<td class="gt_row gt_right">31</td>
+<td class="gt_row gt_right">28</td>
+<td class="gt_row gt_right">11</td>
+<td class="gt_row gt_right">7</td></tr>
+    <tr><td class="gt_row gt_right">2014-2015</td>
+<td class="gt_row gt_right">38</td>
+<td class="gt_row gt_right">43</td>
+<td class="gt_row gt_right">18</td>
+<td class="gt_row gt_right">5</td></tr>
+    <tr><td class="gt_row gt_right">2015-2016</td>
+<td class="gt_row gt_right">33</td>
+<td class="gt_row gt_right">26</td>
+<td class="gt_row gt_right">14</td>
+<td class="gt_row gt_right">3</td></tr>
+    <tr><td class="gt_row gt_right">2016-2017</td>
+<td class="gt_row gt_right">34</td>
+<td class="gt_row gt_right">37</td>
+<td class="gt_row gt_right">9</td>
+<td class="gt_row gt_right">6</td></tr>
+    <tr><td class="gt_row gt_right">2017-2018</td>
+<td class="gt_row gt_right">36</td>
+<td class="gt_row gt_right">34</td>
+<td class="gt_row gt_right">12</td>
+<td class="gt_row gt_right">2</td></tr>
+    <tr><td class="gt_row gt_right">2018-2019</td>
+<td class="gt_row gt_right">34</td>
+<td class="gt_row gt_right">36</td>
+<td class="gt_row gt_right">13</td>
+<td class="gt_row gt_right">4</td></tr>
+    <tr><td class="gt_row gt_right">2019-2020</td>
+<td class="gt_row gt_right">33</td>
+<td class="gt_row gt_right">25</td>
+<td class="gt_row gt_right">21</td>
+<td class="gt_row gt_right">5</td></tr>
+    <tr><td class="gt_row gt_right">2020-2021</td>
+<td class="gt_row gt_right">35</td>
+<td class="gt_row gt_right">30</td>
+<td class="gt_row gt_right">9</td>
+<td class="gt_row gt_right">3</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>Un punto destacable de este paquete es que podemos acceder a datos muy puntuales, como todas aquellas incidencias relacionadas con las <strong>oportunidades de tiro</strong> de un jugador o jugadora por campeonato y/o temporada. Veamos a continuación el ratio de goles convertidos por la cantidad de tiros al arco pateados por Messi jugando en la Champions Legue entre 2004 y 2022.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>messi_tiros <span class="ot">&lt;-</span> <span class="fu">fb_player_season_stats</span>(<span class="st">"https://fbref.com/en/players/d70ce98e/Lionel-Messi"</span>, <span class="at">stat_type =</span> <span class="st">'shooting'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#write.xlsx(messi_tiros, 'messi_tiros.xlsx')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tiroschampion<span class="ot">&lt;-</span>messi_tiros<span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Comp<span class="sc">==</span><span class="st">"1. Champions Lg"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tiroschampion) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Season, <span class="at">y =</span> G_per_SoT_Standard) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#A8B9D9"</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Temporada"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"goles/tiros al arco"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Lionel Messi en la Champions League 2004/2022"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Ratio de goles convertidos por disparos al arcos"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption=</span> <span class="st">"T&amp;S en base a datos de fbref.com. Año 2022."</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span>G_per_SoT_Standard))<span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">35</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="socc_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><em>Resulta significativa la efectividad de Messi en la última temporada no?</em></p>
+<p>Para concluir el apartado de datos individuales, avanzaremos en la creación de una <strong>comparativa</strong>, requiriendo en simultáneo datos sobre los minutos jugados por <u>Messi y Ronaldo</u> en la temporada 2022-2023, considerando los partidos de liga y copa internacional (Champions o UEFA dependiendiendo el caso). Nos interesa saber cómo llegan ambos al mundial de Qatar en lo que respecta a ritmo futbolístico y tiempo en cancha.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pasamos la funcion fb_player_season_stats al vector de messi y ronaldo.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>jugadores <span class="ot">&lt;-</span> <span class="fu">fb_player_season_stats</span>(<span class="at">player_url =</span> <span class="fu">c</span>(<span class="st">"https://fbref.com/en/players/d70ce98e/Lionel-Messi"</span>, <span class="st">"https://fbref.com/en/players/dea698d9/Cristiano-Ronaldo"</span>), <span class="at">stat_type =</span> <span class="st">"playing_time"</span>)<span class="co">#datos de tiempo de juego</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#openxlsx::write.xlsx(jugadores, 'jugadores.xlsx')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>jugadores<span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Season<span class="sc">==</span><span class="st">"2022-2023"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(player_name)<span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">partidos_tot=</span><span class="fu">sum</span>(MP), </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_tot=</span> <span class="fu">sum</span>(Min_Time),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_prom=</span> min_tot<span class="sc">/</span>partidos_tot)<span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate_if</span>(is.numeric, round, <span class="at">digits=</span><span class="dv">1</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="tbvfhucroq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+:where(#tbvfhucroq) .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+:where(#tbvfhucroq) .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+:where(#tbvfhucroq) .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+:where(#tbvfhucroq) .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+:where(#tbvfhucroq) .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+:where(#tbvfhucroq) .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+:where(#tbvfhucroq) .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+:where(#tbvfhucroq) .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+:where(#tbvfhucroq) .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+:where(#tbvfhucroq) .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+:where(#tbvfhucroq) .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+:where(#tbvfhucroq) .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+:where(#tbvfhucroq) .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#tbvfhucroq) .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+:where(#tbvfhucroq) .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+:where(#tbvfhucroq) .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#tbvfhucroq) .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+:where(#tbvfhucroq) .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#tbvfhucroq) .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+:where(#tbvfhucroq) .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#tbvfhucroq) .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#tbvfhucroq) .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#tbvfhucroq) .gt_left {
+  text-align: left;
+}
+
+:where(#tbvfhucroq) .gt_center {
+  text-align: center;
+}
+
+:where(#tbvfhucroq) .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+:where(#tbvfhucroq) .gt_font_normal {
+  font-weight: normal;
+}
+
+:where(#tbvfhucroq) .gt_font_bold {
+  font-weight: bold;
+}
+
+:where(#tbvfhucroq) .gt_font_italic {
+  font-style: italic;
+}
+
+:where(#tbvfhucroq) .gt_super {
+  font-size: 65%;
+}
+
+:where(#tbvfhucroq) .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+:where(#tbvfhucroq) .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+:where(#tbvfhucroq) .gt_indent_1 {
+  text-indent: 5px;
+}
+
+:where(#tbvfhucroq) .gt_indent_2 {
+  text-indent: 10px;
+}
+
+:where(#tbvfhucroq) .gt_indent_3 {
+  text-indent: 15px;
+}
+
+:where(#tbvfhucroq) .gt_indent_4 {
+  text-indent: 20px;
+}
+
+:where(#tbvfhucroq) .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col">player_name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">partidos_tot</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">min_tot</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">min_prom</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left">Cristiano Ronaldo</td>
+<td class="gt_row gt_right">14</td>
+<td class="gt_row gt_right">875</td>
+<td class="gt_row gt_right">62.5</td></tr>
+    <tr><td class="gt_row gt_left">Lionel Messi</td>
+<td class="gt_row gt_right">17</td>
+<td class="gt_row gt_right">1486</td>
+<td class="gt_row gt_right">87.4</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>En una primera vista, podríamos decir que en los últimos tiempos Messi jugó más que Ronaldo, participando de más partidos y siendo parte de los mismos durante más tiempo.</p>
+</section>
+<section id="ligas-y-partidos" class="level3">
+<h3 class="anchored" data-anchor-id="ligas-y-partidos">Ligas y partidos</h3>
+<p>Otra posibilidad que nos brinda el paquete es recopilar, fecha a fecha, los partidos de una liga particular y sus incidencias.</p>
+<p>Pongamos nuestra atención en último <u>torneo argentino de primera división</u>. Para ello vamos a recopilar mediante la funcion <em>fb_match_urls</em> los links de fbref con los datos de los partidos y vamos a guardarlos en el objeto primera_division.</p>
+<p>Al objeto primera división podremos pedirle campos detallados de estadísticas de goles, tiros al arco, pases, posesión y más. En este caso requeriremos un summary, o resumen, del torneo. Para ello utilizaremos la función <em>fb_advanced_match_stats.</em></p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fb_match_urls recopila los links cada partido en la base de fbstats</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>primera_division <span class="ot">&lt;-</span> <span class="fu">fb_match_urls</span>(<span class="at">country =</span> <span class="st">"ARG"</span>, <span class="co">#liga arg</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">gender =</span> <span class="st">"M"</span>, <span class="co">#masculino</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">season_end_year =</span> <span class="dv">2022</span>, <span class="co">#temporada</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">tier=</span><span class="st">"1st"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># #recuperamos las estadisticas avanzadas</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>primera_resumen <span class="ot">&lt;-</span> <span class="fu">fb_advanced_match_stats</span>(<span class="at">match_url =</span> primera_division,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                                                       <span class="at">stat_type =</span> <span class="st">"summary"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                                                       <span class="at">team_or_player =</span> <span class="st">"team"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(primera)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 754
+Columns: 38
+$ League            &lt;chr&gt; "Argentine Primera División", "Argentine Primera Div~
+$ Match_Date        &lt;chr&gt; "2022-06-03", "2022-06-03", "2022-06-04", "2022-06-0~
+$ Matchweek         &lt;chr&gt; "Argentine Primera División (Matchweek 1)", "Argenti~
+$ Home_Team         &lt;chr&gt; "Barracas Central", "Barracas Central", "Tucumán", "~
+$ Home_Formation    &lt;chr&gt; "4-2-3-1", "4-2-3-1", "4-4-2", "4-4-2", "3-4-1-2", "~
+$ Home_Score        &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 1, 1~
+$ Home_xG           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
+$ Home_Goals        &lt;chr&gt; "Iván Tapia (P) · 13&amp;rsquor;", "Iván Tapia (P) · 13&amp;~
+$ Home_Yellow_Cards &lt;chr&gt; "2", "2", "6", "6", "1", "1", "1", "1", "2", "2", "1~
+$ Home_Red_Cards    &lt;chr&gt; "0", "0", "1", "1", "1", "1", "0", "0", "0", "0", "0~
+$ Away_Team         &lt;chr&gt; "CC Córdoba", "CC Córdoba", "Colón", "Colón", "Indep~
+$ Away_Formation    &lt;chr&gt; "4-4-2", "4-4-2", "4-5-1", "4-5-1", "4-2-3-1", "4-2-~
+$ Away_Score        &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1~
+$ Away_xG           &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
+$ Away_Goals        &lt;chr&gt; "Renzo López · 77&amp;rsquor;", "Renzo López · 77&amp;rsquor~
+$ Away_Yellow_Cards &lt;chr&gt; "5", "5", "4", "4", "2", "2", "3", "3", "2", "2", "2~
+$ Away_Red_Cards    &lt;chr&gt; "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0~
+$ Game_URL          &lt;chr&gt; "https://fbref.com/en/matches/fa531c8b/Barracas-Cent~
+$ Team              &lt;chr&gt; "Barracas Central", "CC Córdoba", "Tucumán", "Colón"~
+$ Home_Away         &lt;chr&gt; "Home", "Away", "Home", "Away", "Home", "Away", "Hom~
+$ Min               &lt;dbl&gt; 990, 990, 983, 990, 984, 990, 990, 990, 990, 990, 99~
+$ Gls               &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 0, 1, 1~
+$ Ast               &lt;dbl&gt; 0, 1, 1, 0, 1, 1, 0, 2, 0, 1, 0, 1, 1, 2, 1, 0, 1, 1~
+$ PK                &lt;dbl&gt; 1, 0, 0, 1, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0~
+$ PKatt             &lt;dbl&gt; 2, 0, 0, 1, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0~
+$ Sh                &lt;dbl&gt; 9, 12, 19, 7, 11, 17, 12, 11, 11, 15, 15, 9, 13, 10,~
+$ SoT               &lt;dbl&gt; 5, 6, 4, 3, 3, 4, 3, 3, 6, 3, 7, 5, 2, 4, 5, 2, 5, 6~
+$ CrdY              &lt;dbl&gt; 2, 5, 5, 4, 1, 2, 1, 3, 2, 2, 1, 2, 2, 2, 3, 4, 2, 3~
+$ CrdR              &lt;dbl&gt; 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0~
+$ Fls               &lt;dbl&gt; 12, 20, 13, 13, 11, 7, 6, 15, 12, 10, 20, 17, 13, 15~
+$ Fld               &lt;dbl&gt; 19, 10, 10, 13, 7, 11, 14, 5, 9, 12, 17, 20, 14, 11,~
+$ Off               &lt;dbl&gt; 1, 3, 1, 0, 1, 2, 1, 0, 3, 0, 0, 1, 3, 0, 0, 4, 1, 3~
+$ Crs               &lt;dbl&gt; 21, 19, 27, 15, 26, 17, 26, 19, 27, 15, 19, 19, 36, ~
+$ TklW              &lt;dbl&gt; 10, 20, 13, 8, 9, 11, 8, 12, 11, 18, 21, 12, 9, 16, ~
+$ Int               &lt;dbl&gt; 11, 16, 13, 5, 8, 5, 12, 13, 17, 8, 9, 10, 17, 6, 4,~
+$ OG                &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0~
+$ PKwon             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
+$ PKcon             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~</code></pre>
+</div>
+</div>
+<p>La cantidad de datos que nos proveemos con el campo de consulta <em>summary</em> es significativa. Hagamos una transformación de nuestro conjunto de datos para establecer el resultado de los partidos jugados por el club Boca Juniors según la condición de local y visitante.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>boca<span class="ot">&lt;-</span>primera<span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Team<span class="sc">==</span><span class="st">"Boca Juniors"</span>)<span class="sc">%&gt;%</span> <span class="co">#filtamos el equipo</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Match_Date, Home_Team, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>         Away_Team, Home_Score, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>         Away_Score, Home_Away)<span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">puntos_obtenidos=</span><span class="fu">case_when</span>(Home_Away<span class="sc">==</span><span class="st">"Home"</span> <span class="sc">&amp;</span> Home_Score<span class="sc">&gt;</span>Away_Score <span class="sc">~</span><span class="dv">3</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                           Home_Away<span class="sc">==</span><span class="st">"Home"</span> <span class="sc">&amp;</span> Home_Score<span class="sc">&lt;</span>Away_Score<span class="sc">~</span><span class="dv">0</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                           Home_Away<span class="sc">==</span><span class="st">"Away"</span> <span class="sc">&amp;</span> Home_Score<span class="sc">&gt;</span>Away_Score<span class="sc">~</span><span class="dv">0</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                           Home_Away<span class="sc">==</span><span class="st">"Away"</span> <span class="sc">&amp;</span> Home_Score<span class="sc">&lt;</span>Away_Score<span class="sc">~</span><span class="dv">3</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                           Home_Score<span class="sc">==</span>Away_Score<span class="sc">~</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Podremos preguntarnos cuantos puntos sacó Boca en el último torneo?</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#si!</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>boca<span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">resumen=</span><span class="fu">sum</span>(puntos_obtenidos))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  resumen
+1      52</code></pre>
+</div>
+</div>
+<p>Y cual fue la performance de Boca de local y visitante?</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tambien!</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>boca <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(Home_Away, puntos_obtenidos)<span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">"row"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"row"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_ns</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_title</span>(<span class="st">"combined"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Home_Away/puntos_obtenidos         0         1          3
+                       Away 38.5% (5)  7.7% (1) 53.8%  (7)
+                       Home 14.3% (2) 21.4% (3) 64.3%  (9)
+                      Total 25.9% (7) 14.8% (4) 59.3% (16)</code></pre>
+</div>
+</div>
+<p><em>Podremos observar que el equipo sumó más puntos de local ganando más partidos y perdiendo menos que de visitante.</em></p>
+<p>Por último grafiquemos la progresión de puntos obtenidos fecha a fecha por el conjunto de la rivera durante el último torneo.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>boca<span class="ot">&lt;-</span>boca<span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cumsum =</span> <span class="fu">cumsum</span>(puntos_obtenidos), <span class="co">#puntos acumulados</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">fecha=</span><span class="fu">as.Date</span>(Match_Date))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>boca<span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> fecha, <span class="at">y =</span> cumsum) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="st">"circle"</span>, <span class="at">size =</span> <span class="fl">1.7</span>, <span class="at">colour =</span> <span class="st">"#4682B4"</span>) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">colour =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%b/%d"</span>, </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">date_breaks=</span> <span class="st">"week"</span>)<span class="sc">+</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Semana"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Puntaje"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Boca Juniors: Progresión de puntos obtenidos en la liga 2022"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Primera División."</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Tecnología y Sociedad en base a datos de FBStats. Año 2022"</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  ggthemes<span class="sc">::</span><span class="fu">theme_stata</span>()<span class="sc">+</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="socc_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="historial-de-mundiales" class="level3">
+<h3 class="anchored" data-anchor-id="historial-de-mundiales">Historial de Mundiales</h3>
+<p>Como último elemento de nuestra exploración con R en el campo de las sports analytics, utilizaremos la función <em>load_match_comp_results</em> para recuperar en un dataframe los resultados históricos de los mundiales femeninos de fútbol.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mundiales_w <span class="ot">&lt;-</span> <span class="fu">load_match_comp_results</span>(<span class="at">comp_name =</span> <span class="st">"FIFA Women's World Cup"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#openxlsx::write.xlsx(mundiales_w, 'mundiales_w.xlsx') </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(mundiales_w)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 284
+Columns: 20
+$ Competition_Name &lt;chr&gt; "FIFA Women's World Cup", "FIFA Women's World Cup", "~
+$ Gender           &lt;chr&gt; "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F"~
+$ Country          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
+$ Season_End_Year  &lt;dbl&gt; 1991, 1991, 1991, 1991, 1991, 1991, 1991, 1991, 1991,~
+$ Round            &lt;chr&gt; "Group stage", "Group stage", "Group stage", "Group s~
+$ Wk               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
+$ Day              &lt;chr&gt; "Sat", "Sun", "Sun", "Sun", "Sun", "Sun", "Tue", "Tue~
+$ Date             &lt;dbl&gt; 33558, 33559, 33559, 33559, 33559, 33559, 33561, 3356~
+$ Time             &lt;chr&gt; "20:45", "15:30", "19:45", "19:45", "19:45", "19:45",~
+$ Home             &lt;chr&gt; "China PR cn", "Germany de", "Japan jp", "Chinese Tai~
+$ HomeGoals        &lt;dbl&gt; 4, 4, 0, 0, 3, 2, 4, 1, 2, 0, 0, 0, 0, 0, 2, 4, 2, 0,~
+$ Home_xG          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
+$ Away             &lt;chr&gt; "no Norway", "ng Nigeria", "br Brazil", "it Italy", "~
+$ AwayGoals        &lt;dbl&gt; 0, 0, 1, 5, 0, 3, 0, 0, 2, 5, 8, 3, 3, 2, 0, 1, 1, 2,~
+$ Away_xG          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N~
+$ Attendance       &lt;dbl&gt; 65000, 14000, 14000, 11000, 14000, 14000, 12000, 1200~
+$ Venue            &lt;chr&gt; "Tianhe Stadium (Neutral Site)", "Jiangmen Stadium (N~
+$ Referee          &lt;chr&gt; "Salvador Imperatore Marcone", "Rafael Rodriguez", "L~
+$ Notes            &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "~
+$ MatchURL         &lt;chr&gt; "https://fbref.com/en/matches/0d9e0f26/China-PR-Norwa~</code></pre>
+</div>
+</div>
+<p>Cuantos goles se anotaron en lo mundiales femeninos torneo a torneo? Cómo evolucionó la cantidad de asistentes por torneo?</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mundiales_tidy <span class="ot">&lt;-</span> mundiales_w<span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Season_End_Year, HomeGoals, AwayGoals, Attendance)<span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">goles=</span>HomeGoals<span class="sc">+</span>AwayGoals)<span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Season_End_Year)<span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">goles_total=</span><span class="fu">sum</span>(goles),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">asistentes=</span><span class="fu">sum</span>(Attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fecha=</span><span class="fu">as.factor</span>(Season_End_Year))<span class="sc">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>Season_End_Year)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>mundiales_tidy<span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="wfifopqvpm" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+:where(#wfifopqvpm) .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+:where(#wfifopqvpm) .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+:where(#wfifopqvpm) .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+:where(#wfifopqvpm) .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+:where(#wfifopqvpm) .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+:where(#wfifopqvpm) .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+:where(#wfifopqvpm) .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+:where(#wfifopqvpm) .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+:where(#wfifopqvpm) .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+:where(#wfifopqvpm) .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+:where(#wfifopqvpm) .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+:where(#wfifopqvpm) .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+:where(#wfifopqvpm) .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#wfifopqvpm) .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+:where(#wfifopqvpm) .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+:where(#wfifopqvpm) .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#wfifopqvpm) .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+:where(#wfifopqvpm) .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#wfifopqvpm) .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+:where(#wfifopqvpm) .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#wfifopqvpm) .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+:where(#wfifopqvpm) .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+:where(#wfifopqvpm) .gt_left {
+  text-align: left;
+}
+
+:where(#wfifopqvpm) .gt_center {
+  text-align: center;
+}
+
+:where(#wfifopqvpm) .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+:where(#wfifopqvpm) .gt_font_normal {
+  font-weight: normal;
+}
+
+:where(#wfifopqvpm) .gt_font_bold {
+  font-weight: bold;
+}
+
+:where(#wfifopqvpm) .gt_font_italic {
+  font-style: italic;
+}
+
+:where(#wfifopqvpm) .gt_super {
+  font-size: 65%;
+}
+
+:where(#wfifopqvpm) .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+:where(#wfifopqvpm) .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+:where(#wfifopqvpm) .gt_indent_1 {
+  text-indent: 5px;
+}
+
+:where(#wfifopqvpm) .gt_indent_2 {
+  text-indent: 10px;
+}
+
+:where(#wfifopqvpm) .gt_indent_3 {
+  text-indent: 15px;
+}
+
+:where(#wfifopqvpm) .gt_indent_4 {
+  text-indent: 20px;
+}
+
+:where(#wfifopqvpm) .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">goles_total</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">asistentes</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col">fecha</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_right">99</td>
+<td class="gt_row gt_right">515000</td>
+<td class="gt_row gt_center">1991</td></tr>
+    <tr><td class="gt_row gt_right">99</td>
+<td class="gt_row gt_right">112294</td>
+<td class="gt_row gt_center">1995</td></tr>
+    <tr><td class="gt_row gt_right">122</td>
+<td class="gt_row gt_right">1214215</td>
+<td class="gt_row gt_center">1999</td></tr>
+    <tr><td class="gt_row gt_right">105</td>
+<td class="gt_row gt_right">656789</td>
+<td class="gt_row gt_center">2003</td></tr>
+    <tr><td class="gt_row gt_right">111</td>
+<td class="gt_row gt_right">1176955</td>
+<td class="gt_row gt_center">2007</td></tr>
+    <tr><td class="gt_row gt_right">86</td>
+<td class="gt_row gt_right">248107</td>
+<td class="gt_row gt_center">2011</td></tr>
+    <tr><td class="gt_row gt_right">146</td>
+<td class="gt_row gt_right">1353486</td>
+<td class="gt_row gt_center">2015</td></tr>
+    <tr><td class="gt_row gt_right">146</td>
+<td class="gt_row gt_right">1095118</td>
+<td class="gt_row gt_center">2019</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>Grafiquemos nuestros resultados, vamos usar el eje Y para dar cuenta del público, y en un eje Y secundario para imprimir los datos de los goles.</p>
+<div class="cell">
+<details>
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mundiales_tidy<span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">x=</span>fecha, <span class="at">y=</span>asistentes), </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">fill=</span><span class="st">"#9BCD9B"</span>, <span class="at">alpha=</span><span class="fl">0.7</span>, <span class="at">group =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>fecha, <span class="at">y=</span>goles_total<span class="sc">*</span><span class="dv">10000</span>), <span class="at">size=</span><span class="fl">1.2</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">color=</span><span class="st">"#278AFC"</span>, <span class="at">group =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>fecha, <span class="at">y=</span>goles_total<span class="sc">*</span><span class="dv">10000</span>), <span class="at">size=</span><span class="dv">2</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">color=</span><span class="st">"#0364D4"</span>, <span class="at">alpha=</span><span class="fl">0.5</span> ,<span class="at">group =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span> <span class="st">"Espectadores y Goles por Mundial Femenino disputado"</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Período 1991-2019."</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Torneo"</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Espectadores"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"T&amp;S en base a datos de fbref.com. Año 2022."</span>)<span class="sc">+</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">sec.axis=</span><span class="fu">sec_axis</span>(<span class="sc">~</span>.<span class="sc">*</span><span class="fl">0.0001</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">name=</span><span class="st">"Goles"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="socc_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusiones" class="level2">
+<h2 class="anchored" data-anchor-id="conclusiones">Conclusiones</h2>
+<p>A lo largo de esta experiencia pudimos adentrarnos la múltiples posibilidades que nos brinda R para recopilar y explorar datos de fútbol utilizando el paquete worldfootballR. Llevando adelante técnicas EDA y de análisis descriptivo pudimos respondernos algunas preguntas sistematizando distintos conjuntos de datos descargados en cápsulas de información relevante, la materia prima que alimenta los procesos de analítica descriptiva.</p>
+<p>Será destacable mencionar que este tipo de experiencias aplicadas no sólo son últiles para el análisis de procesos deportivos en sí, sino que además pueden coadyuvar a robustecer las habilidades de procesamiento e indagación con datos de analistas en formación, ya que se trata de técnicas amenas que constelan con abordajes de realidades gamificadas y cercanas .</p>
+<p>En suma, las sports analytics hoy son una realidad en el mundo del análisis y ciencia de datos, pueden ser una interesante puerta de entrada para los principiantes o una profesión rentable para los analistas profesionales…un momento…qué podemos saber sobre el Mundial de Qatar 2022?</p>
+<p>Continuará.</p>
+</section>
+<section id="bibliografía" class="level2">
+<h2 class="anchored" data-anchor-id="bibliografía">Bibliografía:</h2>
+<p>Extracting data from FBref : https://jaseziv.github.io/worldfootballR/articles/extract-fbref-data.html</p>
+<p>Football Analytics: Creating an xG-xGA comparison chart in R : https://www.invertedwinger.com/football-analytics-creating-an-xg-xga-comparison-chart-in-r/</p>
+<p>Sport Analytics: A Review: https://www.academia.edu/73063599/Sport_Analytics_A_Review</p>
+<p>Big data and tactical analysis in elite soccer: future challenges and opportunities for sports science. https://springerplus.springeropen.com/articles/10.1186/s40064-016-3108-2<br>
+</p>
+<p><br>
+</p>
+<p><br>
+</p>
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div quarto-reuse="quarto-reuse" class="quarto-appendix-contents"><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</a></div></section><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{damianorden2022,
+  author = {Pedro Damian Orden},
+  editor = {},
+  title = {Sports {Analytics} Con {R:} Explorando Datos de {Fútbol}},
+  date = {2022-11-02},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-damianorden2022" class="csl-entry quarto-appendix-citeas" role="doc-biblioentry">
+Pedro Damian Orden. 2022. <span>“Sports Analytics Con R: Explorando
+Datos de Fútbol.”</span> November 2, 2022.
+</div></div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } 
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
